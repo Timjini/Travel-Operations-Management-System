@@ -144,6 +144,6 @@ class File extends Model
 
     public function assignees()
     {
-        return $this->hasMany(Assignee::class);
+        return $this->hasMany(FileAssignee::class);
     }
 }

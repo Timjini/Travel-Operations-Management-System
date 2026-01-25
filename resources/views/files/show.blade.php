@@ -220,5 +220,103 @@
             </div>
         </div>
         @endif
+
+        <!-- Add assignee -->
+            <!-- Assignees Section -->
+        <div class="bg-gray-200 shadow rounded-lg overflow-hidden mt-4" x-data="{open: false}">
+            <!-- Table Header with Create Button -->
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">File Assignees</h3>
+                    <x-primary-button @click="open = !open">
+                        {{ __('Add New Assignee') }}
+                    </x-primary-button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Information</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned At</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @forelse($file->assignees()->get() as $fileAssignee)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ $fileAssignee->assignee->name ?? ''}}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ $fileAssignee->assignee->email }}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ $fileAssignee->assignee->company_info ?? ''}}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $fileAssignee->assignee->created_at->format('M d, Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end space-x-2">
+                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <form method="POST" action="#">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Remove this assignee?')">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Adding assignee data -->
+                            <tr x-show="open">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <x-text-input name="name" type="text"/>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                      <x-text-input name="email" type="email" />
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <x-text-input name="company_info" type="text" />
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end space-x-2">
+                                        <form method="POST" action="#">
+                                            <button type="submit" href="#" class="text-green-600 hover:text-green-900">Create</button>
+                                        </form>
+                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <form method="POST" action="#">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Remove this assignee?')">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">
+                                    No assignees found for this file.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </x-app-layout>

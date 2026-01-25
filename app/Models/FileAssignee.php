@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Assignee extends Model 
+class FileAssignee extends Model 
 {
     public $incrementing = false;
     protected $keyType = 'string';
@@ -16,9 +16,8 @@ class Assignee extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'email',
-        'company_info',
-        'note'
+        'file_id',
+        'assignee_id',
     ];
 
     /**
@@ -65,8 +64,13 @@ class Assignee extends Model
         });
     }
 
-    // public function files()
-    // {
-    //     return $this->hasMany(File::class);
-    // }
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
+
+    public function assignee()
+    {
+        return $this->belongsTo(Assignee::class);
+    }
 }
