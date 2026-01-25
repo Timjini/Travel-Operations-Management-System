@@ -17,9 +17,11 @@ class UserController extends Controller
     {
         $companyId = Auth::user()->company_id;
 
-        $users = User::where('company_id', $companyId)->get();
         return view('users.index', [
-            'users' => $users
+            'users' => User::query()
+                ->where('company_id', $companyId)
+                ->latest()
+                ->paginate(10),
         ]);
     }
 
