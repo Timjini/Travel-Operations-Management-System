@@ -45,7 +45,7 @@
                                   required
                                   autocomplete="current-password"
                                   placeholder="••••••••" />
-                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#999] hover:text-[#333] transition">
+                    <button id="passwordToggle" type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#999] hover:text-[#333] transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                             <circle cx="12" cy="12" r="3"/>
@@ -74,3 +74,17 @@
         </form>
     </div>
 </x-guest-layout>
+<script>
+    /** Password Visibility Login */
+const el = document.getElementById("passwordToggle");
+el.addEventListener("click", () => {
+    const targetInput = document.getElementById("password");
+
+    if (targetInput.type === "password") {
+        targetInput.type = "text";
+    } else {
+        targetInput.type = "password";
+    }
+});
+
+</script>
