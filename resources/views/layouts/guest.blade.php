@@ -40,21 +40,6 @@
                 {{ $slot }}
             </div>
         </div>
-
-        <script>
-            document.addEventListener('livewire:init', () => {
-                Livewire.on('closeModal', () => {
-                    // This will close any modal by resetting the selectedItemId
-                    Livewire.emit('resetSelectedItemId');
-                });
-                
-                Livewire.on('costAdded', () => {
-                    // Refresh the items table
-                    Livewire.emit('refresh');
-                });
-            });
-        
-        </script>
             @livewire('livewire-ui-modal')
     </body>
 </html>

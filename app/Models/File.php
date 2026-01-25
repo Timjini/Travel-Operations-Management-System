@@ -141,4 +141,9 @@ class File extends Model
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+
+    public function assignees()
+    {
+        return $this->hasMany(Assignee::class);
+    }
 }

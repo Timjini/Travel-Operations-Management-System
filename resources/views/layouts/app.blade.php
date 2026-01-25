@@ -64,18 +64,6 @@
         </div>
     </div>
     @livewireScripts
-<script>
-    document.addEventListener('livewire:init', () => {
-        Livewire.on('closeModal', () => {
-            Livewire.emit('resetSelectedItemId');
-        });
-        
-        Livewire.on('costAdded', () => {
-            Livewire.emit('refresh');
-        });
-    });
-
-</script>
     @livewire('livewire-ui-modal')
 
 </body>

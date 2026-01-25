@@ -3,25 +3,15 @@ import "./flash";
 
 import Alpine from "alpinejs";
 import focus from '@alpinejs/focus'
+import collapse from '@alpinejs/collapse'
+
+Alpine.plugin(focus)
+Alpine.plugin(collapse)
 
 window.Alpine = Alpine;
-Alpine.plugin(focus)
+
+if (window.Livewire) {
+    window.Livewire.start();
+}
 
 Alpine.start();
-
-
-// /** Auth  */
-// document.addEventListener('alpine:init', () => {
-//     console.log("loading function")
-// function togglePassword(input)
-// {
-//     const el = document.getElementById(input);
-//     if (el.type === 'password')
-//     {
-//         el.type = 'text';
-//     } else 
-//     {
-//         el.type = 'password';
-//     }
-// }
-// });
