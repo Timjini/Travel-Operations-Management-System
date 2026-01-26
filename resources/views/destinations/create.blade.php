@@ -89,7 +89,7 @@
 
                         <div>
                             <x-input-label for="timezone" :value="__('Timezone')" />
-                            <select id="timezone" name="timezone" class="bg-gray-50 text-gray-900  flex-1 min-w-0 text-sm  p-2.5 px-4 py-2 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4DA8DA] focus:border-transparent transition mt-1 block w-full">
+                            <select id="timezone" name="timezone" class="px-4 py-3 bg-gray-50 text-gray-900  flex-1 min-w-0 text-sm  p-2.5  border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4DA8DA] focus:border-transparent transition mt-1 block w-full">
                                 <option value="">-- Select --</option>
                                 @foreach(config('timezones.all') as $tz)
                                 <option value="{{ $tz }}" @selected(old('timezone') == $tz)>{{ $tz }}</option>
@@ -101,7 +101,7 @@
                         <div>
                             <x-input-label for="currency_id" :value="__('Currency')" />
                             <div class="flex">
-                                <select id="currency_id" name="currency_id" class="bg-gray-50 text-gray-900  flex-1 min-w-0 text-sm  p-2.5 px-4 py-2 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4DA8DA] focus:border-transparent transition mt-1 block w-full">
+                                <select id="currency_id" name="currency_id" class="bg-gray-50 text-gray-900  flex-1 min-w-0 text-sm  p-2.5 px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4DA8DA] focus:border-transparent transition mt-1 block w-full">
                                     <option value="">-- Select --</option>
                                     @foreach($currencies as $currency)
                                     <option value="{{ $currency->id }}" @selected(old('currency_id') == $currency->id)>

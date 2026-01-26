@@ -72,7 +72,7 @@
                         <!-- Program -->
                         <div>
                             <x-input-label for="program_id" :value="__('Program')" />
-                            <select id="program_id" name="program_id" class="rounded bg-gray-50 border text-gray-900  flex-1 min-w-0 text-sm border-gray-300 p-2.5 mt-1 block w-full">
+                            <select id="program_id" name="program_id" class="rounded-xl bg-gray-50 border text-gray-900  flex-1 min-w-0 text-sm border-gray-300 p-2.5 mt-1 block w-full">
                                 <option value="">Select Program</option>
                                 @foreach($programs as $program)
                                     <option value="{{ $program->id }}" {{ old('program_id') == $program->id ? 'selected' : '' }}>
@@ -86,7 +86,7 @@
                         <!-- Destination -->
                         <div>
                             <x-input-label for="destination_id" :value="__('Destination')" />
-                            <select id="destination_id" name="destination_id" class="rounded bg-gray-50 border text-gray-900  flex-1 min-w-0 text-sm border-gray-300 p-2.5 mt-1 block w-full">
+                            <select id="destination_id" name="destination_id" class="rounded-xl bg-gray-50 border text-gray-900  flex-1 min-w-0 text-sm border-gray-300 p-2.5 mt-1 block w-full">
                                 <option value="">Select Destination</option>
                                 @foreach($destinations as $destination)
                                     <option value="{{ $destination->id }}" {{ old('destination_id') == $destination->id ? 'selected' : '' }}>

@@ -15,8 +15,11 @@ class UserController extends Controller
      */
     public function index(): View
     {
+        $companyId = Auth::user()->company_id;
+
         return view('users.index', [
             'users' => User::query()
+                ->where('company_id', $companyId)
                 ->latest()
                 ->paginate(10),
         ]);

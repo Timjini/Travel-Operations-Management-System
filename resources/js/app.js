@@ -1,9 +1,17 @@
-import './bootstrap';
-import './flash';
+import "./bootstrap";
+import "./flash";
 
+import Alpine from "alpinejs";
+import focus from '@alpinejs/focus'
+import collapse from '@alpinejs/collapse'
 
-import Alpine from 'alpinejs';
+Alpine.plugin(focus)
+Alpine.plugin(collapse)
 
 window.Alpine = Alpine;
+
+if (window.Livewire) {
+    window.Livewire.start();
+}
 
 Alpine.start();

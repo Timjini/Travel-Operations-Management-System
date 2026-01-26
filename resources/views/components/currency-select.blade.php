@@ -12,7 +12,7 @@
     <select 
         id="{{ $name }}" 
         name="{{ $name }}" 
-        class="rounded bg-gray-50 border text-gray-900 flex-1 min-w-0 text-sm border-gray-300 p-2.5 mt-1 block w-full {{ $class }}"
+        class="rounded-xl bg-gray-50 border text-gray-900 flex-1 min-w-0 text-sm border-gray-300 p-2.5 mt-1 block w-full {{ $class }}"
         @if($required) required @endif
     >
         <option value="">Select Currency</option>
