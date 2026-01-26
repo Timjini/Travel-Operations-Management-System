@@ -7,12 +7,14 @@ use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\Destination;
 use App\Models\File;
+use App\Models\FileAssignee;
 use App\Models\FileItem;
 use App\Models\Program;
 use App\Services\Reports\StatsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class FileController extends Controller
@@ -93,10 +95,10 @@ class FileController extends Controller
 
         // financial data
         $data = $this->stats->FileStats();
-    
+
         $allFiles = File::with(['items', 'costs'])->get();
         $financials = $this->stats->calculateFinances($allFiles);
-        
+
         // Get all programs for filter dropdown
         $programs = Program::orderBy('name')->get();
 
@@ -139,15 +141,15 @@ class FileController extends Controller
     /**
      * Update the specified file in storage.
      */
-   public function update(StoreFileRequest $request, File $file)
-{
-    Log::info("-------------->updating file");
-    $validated = $request->validated();
-    $file->update($validated);
+    public function update(StoreFileRequest $request, File $file)
+    {
+        Log::info("-------------->updating file");
+        $validated = $request->validated();
+        $file->update($validated);
 
-    return redirect()->route('files.show', $file)
-                     ->with('success', 'File updated successfully.');
-}
+        return redirect()->route('files.show', $file)
+            ->with('success', 'File updated successfully.');
+    }
 
     /**
      * Show the form for creating a new file.
@@ -258,5 +260,48 @@ class FileController extends Controller
         $item->update($validated);
 
         return response()->json($item->load('currency'));
+    }
+
+    /** 
+     ** File assignee routes (refactor to own controller when necessary)
+     */
+
+    public function createFileAssignee(Request $request) {
+        
+        $validate = Validator::make($request->all(), [
+            'name' => 'nullable',
+            'email' => 'email:rfc,dns',
+            'company_info' => 'nullable'
+        ]);
+
+        if ($validate->fails()) {
+            info("validation failed", ['validation_errors', $validate->errors()]);
+            return back()->with('error', 'Something went Wrong !');
+        }
+
+        // Need to check if Assignee exists else create it then create FileAssignee
+        // Most probably Observer or Event would be best.
+    }
+
+    public function removeFileAssignee(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'assignee_id' => 'exists:assignee,id'
+        ]);
+
+        if ($validate->fails()) {
+            info("validation failed", ['validation_errors', $validate->errors()]);
+            return back()->with('error', 'Something went Wrong !');
+        }
+
+        try {
+            $fileAssignee = FileAssignee::deleted($request->assignee_id);
+            info("File Assignee deleted ", ['fileAssignee' => $fileAssignee]);
+            return redirect()->route('files.index', [$fileAssignee])
+                ->with('success', 'File Assignee deleted.');
+        } catch (\Exception $e) {
+            info("issue deleting Assignee", ['e_messages' => $e->getMessage()]);
+            return back()->with('error', $e->getMessage());
+        }
     }
 }
