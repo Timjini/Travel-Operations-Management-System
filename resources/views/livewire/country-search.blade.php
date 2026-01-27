@@ -11,14 +11,14 @@
         <input 
             type="text" 
             id="country_search"
-            wire:model.live.debounce.500ms="search" 
             placeholder="Search by country name or code..." 
             class="px-4 py-3 block w-full pl-10 pr-3 border border-gray-300 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            wire:model.live.debounce.500ms="search"
             wire:keydown.escape="resetSearch"
             wire:keydown.arrow-up="decrementHighlight"
             wire:keydown.arrow-down="incrementHighlight"
             wire:keydown.enter="selectHighlighted"
-            wire:blur="closeDropdown"
+            {{-- wire:blur="closeDropdown" --}}
         >
         <!-- Hidden input for form submission -->
         <input type="hidden" name="country_id" value="{{ $selectedCountry?->id }}">
@@ -31,6 +31,7 @@
                 <ul>
                     @foreach($countries as $index => $country)
                         <li 
+                            wire:key="country-{{ $country->id }}"
                             wire:click="selectCountry('{{ $country->id }}')"
                             class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-blue-50 {{ $highlightIndex === $index ? 'bg-blue-50' : '' }}"
                         >

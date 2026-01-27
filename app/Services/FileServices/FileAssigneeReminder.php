@@ -9,6 +9,6 @@ class FileAssigneeReminder {
     public static function sendNotification(): void
     {
         $files = File::where('start_date', '>', now())->where('status','pending')->get();
-        info("filesss->", $files);
+        info("Files reminder", [$files]);
     }
 }

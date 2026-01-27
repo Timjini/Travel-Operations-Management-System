@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FileAssigneeCreated;
 use App\Http\Requests\StoreFileRequest;
+use App\Listeners\CreateAssignee;
 use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\Destination;
@@ -266,8 +268,8 @@ class FileController extends Controller
      ** File assignee routes (refactor to own controller when necessary)
      */
 
-    public function createFileAssignee(Request $request) {
-        
+    public function createFileAssignee(Request $request, File $file) {
+        info("request to create assignee", ['request'=> $request->all()]);
         $validate = Validator::make($request->all(), [
             'name' => 'nullable',
             'email' => 'email:rfc,dns',
@@ -281,6 +283,16 @@ class FileController extends Controller
 
         // Need to check if Assignee exists else create it then create FileAssignee
         // Most probably Observer or Event would be best.
+        try {
+
+            event(new FileAssigneeCreated($request->all(), $file->id));
+            return redirect()->route('files.show', [$file])
+            ->with('success', 'File Assignee create.');
+        } catch (\Exception $e){
+            info("validation failed", ['validation_errors', $e->getMessage()]);
+            return redirect()->route('files.show', [$file])
+            ->with('error', 'Something went wrong!' );
+        }
     }
 
     public function removeFileAssignee(Request $request)

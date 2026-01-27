@@ -34,7 +34,7 @@
                         New Customer 
                     </x-link-button>
 
-                    <form action="{{ route('customers.bulkUpload') }}" method="POST" enctype="multipart/form-data" class="bg-white p-1 rounded-lg" x-data="{ loading: false }" @submit="loading = true">
+                    <form action="{{ route('customers.bulkUpload') }}" method="POST" enctype="multipart/form-data" class="bg-white p-1 rounded-lg flex flex-row" x-data="{ loading: false }" @submit="loading = true">
                         @csrf
                         <input type="file" name="csvFile" class="p-2">
                         <x-loading-button label=" {{ __('Upload') }}" />

@@ -67,7 +67,7 @@
 
             
             <!-- User & Logout -->
-            <div class="mt-auto pt-4 border-t border-gray-200">
+            <div class="mt-auto pt-4 border-t border-gray-200 z-50">
                 <a href="{{route('profiles.edit')}}" class="flex items-center px-2">
                     <div class="flex-shrink-0">
                         <svg class="w-8 h-8 rounded-full text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -126,7 +126,7 @@
                         
                         <div x-show="open" @click.away="open = false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                             <div class="py-1">
-                                <a href="{{ route('profiles.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="{{ route('profiles.edit') }}" class="block px-4 py-2 text-sm text-gray-700  hover:bg-slate-500">Profile</a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</button>
@@ -163,7 +163,7 @@
                 @endforeach
             </div>
             
-            <div class="pt-4 pb-3 border-t border-gray-200">
+            <div class="pt-4 pb-3 border-t border-gray-200 z-50">
                 <a href="{{route('profiles.edit')}}" class="flex items-center px-4">
                     <div class="flex-shrink-0">
                         <svg class="h-10 w-10 rounded-full text-gray-400" fill="currentColor" viewBox="0 0 24 24">
