@@ -83,14 +83,35 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h2>Proforma #{{  }}</h2>
+            <h2>File #{{ $file->id }}</h2>
             <span class="badge {{ }}">
-                {{-- {{ ucfirst($proforma->status) }} --}}
+                {{ ucfirst($file->status) }}
             </span>
         </div>
+
+        <div class="content" style="padding: 20px 0; line-height: 1.6; color: #333;">
+            <p>Dear Team,</p>
+            <p>This is a reminder regarding the processing of <strong>File #{{ $file->reference }}</strong>. The file is currently marked as <strong>{{ strtoupper($file->status) }}</strong> and requires your immediate attention to proceed to the next stage of the workflow.</p>
+            
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
+                <strong>File Summary:</strong><br>
+                • <strong>Destination:</strong> {{ $file->destination->name ?? 'N/A' }}<br>
+                • <strong>Travelers:</strong> {{ $file->number_of_people }} People<br>
+                • <strong>Start Date:</strong> {{ \Carbon\Carbon::parse($file->start_date)->format('M d, Y') }}
+            </div>
+    
+            <p>Please review the file details in the ERP system and update the status accordingly to ensure a seamless experience for our clients.</p>
+            
+            <p style="margin-top: 25px;">
+                <a href="{{ config('app.url') }}/files/{{ $file->id }}" 
+                   style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                   View File Details
+                </a>
+            </p>
+        </div>
         <div class="footer">
-            {{-- Created {{ $proforma->created_at->format('M d, Y H:i') }} --}}
-            {{-- | Last updated {{ $proforma->updated_at->format('M d, Y H:i') }} --}}
+            Created {{ $file->created_at->format('M d, Y H:i') }}
+            | Last updated {{ $proforma->updated_at->format('M d, Y H:i') }}
             <br><br>
             {{ config('app.name') }}
         </div>
