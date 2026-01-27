@@ -8,6 +8,7 @@ use Livewire\Component;
 
 class CountrySearch extends Component
 {
+    public $countries = [];
     public $search = '';
     public $highlightIndex = 0;
     public $selectedCountry = null;
@@ -17,10 +18,10 @@ class CountrySearch extends Component
 
     public function render()
     {
-        $countries = collect([]);
-
+        $this->countries = collect([]);
+    
         if (strlen($this->search) >= 2) {
-            $countries = Country::query()
+            $this->countries = Country::query()
                 ->where(function (Builder $query) {
                     $query->where('name', 'like', '%'.$this->search.'%')
                         ->orWhere('code', 'like', '%'.$this->search.'%');
@@ -29,16 +30,15 @@ class CountrySearch extends Component
                 ->limit(10)
                 ->get();
         }
-
-        return view('livewire.country-search', [
-            'countries' => $countries,
-        ]);
+    
+        return view('livewire.country-search');
     }
+    
 
     public function selectCountry($countryId)
     {
         $this->selectedCountry = Country::find($countryId);
-        $this->search = $this->selectedCountry->name;
+        $this->search = "{$this->selectedCountry->name} ({$this->selectedCountry->code})";
         $this->showDropdown = false;
         $this->reset('highlightIndex');
 

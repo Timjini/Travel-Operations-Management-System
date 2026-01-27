@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Destination;
 use App\Models\Setting;
@@ -268,13 +269,6 @@ class SystemController extends Controller
     {
         try {
             $user = Auth::user();
-            info("user to pass to company", ['user_id'=> $user]);
-            // Get default values from .env or use fallbacks
-            $defaultEmail = env('DEFAULT_COMPANY_EMAIL', 'temp-company@example.com');
-            $defaultCountry = env('DEFAULT_COMPANY_COUNTRY', 'United States');
-            $defaultCity = env('DEFAULT_COMPANY_CITY', 'New York');
-            $defaultCurrencyCode = env('DEFAULT_CURRENCY_CODE', 'USD');
-            $defaultCurrencyName = env('DEFAULT_CURRENCY_NAME', 'US Dollar');
 
             // Create temporary company
             $company = Company::create([
@@ -282,11 +276,11 @@ class SystemController extends Controller
                 'legal_name' => 'Temporary Company',
                 'type' => 'other',
                 'logo_path' => null,
-                'email' => $defaultEmail,
-                'address' => 'Temporary Address',
+                'email' => $user->email,
+                'address' => '',
                 'post_code' => '00000',
-                'city' => $defaultCity,
-                'country' => $defaultCountry,
+                'city' => "",
+                'country' => "",
                 'status' => 'active',
                 'created_by' => $user->id,
                 'is_temporary' => true,
@@ -295,31 +289,6 @@ class SystemController extends Controller
             // Assign company to user
             $user->company_id = $company->id;
             $user->save();
-
-            info("user info", ['user' => $user]);
-
-            if(Currency::first() === null)
-            {
-                $currency = Currency::create([
-                    'name' => $defaultCurrencyName,
-                    'code' => $defaultCurrencyCode,
-                    'symbol' => '$', // optional
-                    'company_id' => $company->id,
-                    'created_by' => $user->id,
-                    'is_active' => true,
-                ]);
-            }    
-
-            // Create default destination for this company
-            Destination::create([
-                'name' => 'Default Destination',
-                'city' => $defaultCity,
-                'country' => $defaultCountry,
-                'currency_id' => $currency->id ?? Currency::first()->id,
-                'company_id' => $company->id,
-                'created_by' => $user->id,
-                'is_active' => true,
-            ]);
 
             return redirect()->route('dashboard')->with('success', 'Temporary company created with default currency and destination.');
         } catch (\Exception $e) {

@@ -18,7 +18,8 @@ class Assignee extends Model
     protected $fillable = [
         'email',
         'company_info',
-        'note'
+        'note',
+        'name'
     ];
 
     /**
