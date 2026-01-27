@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,5 +32,14 @@ class AppServiceProvider extends ServiceProvider
             $company = $user && $user->company_id ? $user->company : null;
             $view->with('company', $company);
         });
+        
+        Livewire::setScriptRoute(function ($handle) {
+        return Route::get('/crm/livewire/livewire.js', $handle);
+    });
+
+    // Fix the AJAX update endpoint
+    Livewire::setUpdateRoute(function ($handle) {
+        return Route::post('/crm/livewire/update', $handle);
+    });
     }
 }

@@ -6,16 +6,16 @@
         <div class="absolute bottom-10 -right-10 w-48 h-48 bg-gradient-to-bl from-[#d4f1ff]/50 to-transparent rounded-full blur-3xl"></div>
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.3),transparent_70%)]"></div>
         <!-- Logo -->
-        <div class="grid grid-cols-2 items-center h-16 px-4 border-b border-gray-200">
+        <div class="flex flex-col items-center justify-center h-24 px-4 border-b border-gray-200">
             <a href="{{ route('dashboard') }}" class="flex items-center z-10">
                 <img 
-                    src="{{ $company && $company->logo_path ? Storage::url($company->logo_path) : '/images/default-company-logo.png' }}"
+                    src="/crm/public/{{ $company && $company->logo_path ? Storage::url($company->logo_path) : '/crm/public/images/default-company-logo.png' }}"
                     alt="Logo"
-                    class="p-2 rounded-full h-16 w-auto mx-auto md:mx-0"
+                    class="p-2 rounded-full h-16 w-16 mx-auto md:mx-0"
                 />
 
             </a>
-            <span class="truncate"> {{$company->name ?? ''}} </span>
+            <span class="truncate text-sm"> {{$company->name ?? ''}} </span>
         </div>
         
         <!-- Navigation Menu -->

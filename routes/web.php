@@ -17,6 +17,9 @@ use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSettingController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Country;
+use App\Models\Customer;
+use App\Models\Destination;
 
 // Language switcher route
 Route::redirect('/', '/login');
@@ -189,6 +192,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [ReportController::class, 'generate'])->name('reports.generate');
         Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
      });
+     
+     Route::get('/api/countries', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Country::where('name', 'like', "%{$searchTerm}%")
+        ->limit(10)
+        ->get(['id', 'name']);
+});
+
+Route::get('/api/customers', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Customer::where('name', 'like', "%{$searchTerm}%")
+    ->orWhere('email', 'like', "%{$searchTerm}%")
+        ->limit(10)
+        ->get(['id', 'name', 'email']);
+});
+
+Route::get('/api/destinations', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Destination::where('name', 'like', "%{$searchTerm}%")
+        ->orWhere('city', 'like', '%{$searchTerm}%')
+        ->limit(10)
+        ->get(['id', 'name', 'city']);
+});
 });
 
 require __DIR__.'/auth.php';
