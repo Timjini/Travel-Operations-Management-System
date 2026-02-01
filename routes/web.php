@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Country;
 use App\Models\Customer;
 use App\Models\Destination;
+use App\Models\Supplier;
 
 // Language switcher route
 Route::redirect('/', '/login');
@@ -217,6 +218,15 @@ Route::get('/api/destinations', function (Request $request) {
         ->orWhere('city', 'like', '%{$searchTerm}%')
         ->limit(10)
         ->get(['id', 'name', 'city']);
+});
+
+Route::get('/api/suppliers', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Supplier::where('name', 'like', "%{$searchTerm}%")
+        ->orWhere('email', 'like', '%{$searchTerm}%')
+        ->limit(10)
+        ->get(['id', 'name', 'email']);
 });
 });
 
