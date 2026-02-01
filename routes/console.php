@@ -11,7 +11,7 @@ Artisan::command('inspire', function () {
 
 Schedule::call(function (FileAssigneeReminder $reminder) {
     $reminder->sendNotification();
-})->cron('5 9/48 * * *');
+})->cron('* */48 * * *');
 
 // send reminder manually
 Artisan::command('reminders:send-files', function (FileAssigneeReminder $reminder) {
