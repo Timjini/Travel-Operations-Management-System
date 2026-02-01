@@ -21,6 +21,7 @@ use App\Models\Country;
 use App\Models\Customer;
 use App\Models\Destination;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 // Language switcher route
 Route::redirect('/', '/login');
@@ -100,6 +101,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/{file}', [FileController::class, 'update'])->name('files.update');
     Route::delete('/{file}', [FileController::class, 'destroy'])->name('files.destroy');
     Route::get('/export', [FileController::class, 'index'])->name('files.export');
+
+    Route::post('/{file}/test-service', [FileController::class, 'testService'])->name('files.test');
 
     Route::post('/{file}/assignee-create', [FileController::class, 'createFileAssignee'])->name('files.assignee.create');
     Route::delete('/{file}/assignee-delete', [FileController::class, 'removeFileAssignee'])->name('files.assignee.delete');

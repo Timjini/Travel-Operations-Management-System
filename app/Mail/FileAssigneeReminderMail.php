@@ -21,36 +21,16 @@ class FileAssigneeReminderMail extends Mailable
         public File $file,
     )
     {
-        //
+        $this->file = $file;
     }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            subject: 'File Assignee Reminder',
-        );
-    }
 
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.reminders.file-assignee',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->subject('File #' . $this->file->reference)
+            ->view('emails.reminders.file-assignee')
+            ->with([
+                'file' => $this->file,
+            ]);
     }
 }

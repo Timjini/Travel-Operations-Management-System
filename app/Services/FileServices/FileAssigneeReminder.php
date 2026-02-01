@@ -3,6 +3,7 @@
 namespace App\Services\FileServices;
 
 use App\Mail\FileAssigneeReminderMail;
+use App\Models\Assignee;
 use App\Models\File;
 use App\Services\Mailers\MailerInterface;
 class FileAssigneeReminder {
@@ -15,10 +16,12 @@ class FileAssigneeReminder {
         try {
             foreach ($files as $file) {
                 foreach ($file->assignees as $assignee) {
-                    if (empty($assignee->email)) {
+                    $assigneeEmail = Assignee::find($assignee->assignee_id)->email;
+                    info("assigneeEmail", [$assigneeEmail]);
+                    if (empty($assigneeEmail)) {
                         continue; 
                     }
-                    $this->mailer->send($assignee->email, new FileAssigneeReminderMail($file));
+                    $this->mailer->send($assigneeEmail, new FileAssigneeReminderMail($file));
                 }
             }
             info("file reminder emails sent");

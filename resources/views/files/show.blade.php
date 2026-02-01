@@ -30,6 +30,10 @@
     </nav>
 
     <div class="max-w-8xl px-4 sm:px-6 lg:px-8 py-6">
+        <form method="POST"  action={{route('files.test', $file)}}>
+            @csrf
+            <button type="submit"> email reminder </button>
+        </form>
         <div class="bg-white shadow rounded-lg overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
                 <div class="flex justify-between items-center">
