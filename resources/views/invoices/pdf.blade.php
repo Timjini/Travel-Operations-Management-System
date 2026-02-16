@@ -12,7 +12,31 @@
             padding: 20px;
             color: #333;
         }
+        
+        /* Header Layout */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            position: relative;
+        }
 
+        .logo_image {
+            height: 60px;
+            width: auto;
+        }
+
+        .client-address {
+            font-size: 12px;
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        .proforma-title {
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        
         .header {
             margin-bottom: 30px;
         }
@@ -21,7 +45,7 @@
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 5px;
-            height: 200px;
+            height: 50px;
             width: auto;
         }
 
@@ -44,25 +68,27 @@
             margin-bottom: 30px;
         }
 
+       /* Tables Styling */
         table {
+            font-size: 12px;
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        table.details {
-            margin-bottom: 30px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #f2f2f2; /* Light grey header */
+            color: #333;
+            font-weight: normal;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            vertical-align: top;
         }
 
         .payment-details {
@@ -116,6 +142,43 @@
             text-align: center;
             margin-top: 30px;
         }
+        
+        
+        .main-info-container {
+        width: 100%;
+    }
+    .info-box {
+        width: 48%; 
+        vertical-align: top;
+        display: inline-block; 
+    }
+    .info-table {
+        width: 100%;
+        border-spacing: 0;
+        margin-top: 10px;
+    }
+    .info-table td {
+        vertical-align: top;
+        padding-bottom: 8px;
+        font-size: 12px;
+    }
+    .label {
+        font-weight: bold;
+        width: 80px;
+    }
+    .section-header {
+        font-weight: bold;
+        border-bottom: 1px solid #000;
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .section-title table , th, td{
+        border: none;
+    }
+    .inner-info-table table , th, td{
+        border: none;
+    }
     </style>
 </head>
 
@@ -123,22 +186,68 @@
     @php $companySetting = Auth::user()->company->setting ?? null; $company
     = Auth::user()->company ?? null; $customer = $invoice->file->customer ??
     null; @endphp
-    <div class="header">
+    <div class="header-container">
         <div class="logo">
-            <img src="{{ public_path('images/emotions-travel.png') }}" class="logo_image" />
+            <img src="{{ public_path('images/emotions-morocco-logo.webp') }}" class="logo_image" />
+            <div style="font-size: 10px; color: #0088cc; font-weight: bold;">DESTINATION MANAGEMENT COMPANY</div>
         </div>
-        <div class="address">
-            {{$invoice->file->customer->address}}<br />
-            {{$invoice->file->customer->post_code}}
-            {{$invoice->file->customer->city}}<br />
-            {{$invoice->file->customer->country}}
-        </div>
-    </div>
+    <table class="invoice-header-table" style="border: none;">
+    <tr >
+        <!-- Left Column: Supplier -->
+        <td style="padding-right: 20px;border: none;">
+            <div class="section-title">Supplier Information</div>
+            <table class="inner-info-table" syle="boder:none;">
+                <tr>
+                    <td class="label">Name:</td>
+                    <td>{{ $company->legal_name }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Address:</td>
+                    <td>
+                        {{ $company->address }}<br/>
+                        {{ $company->post_code }} {{ $company->city }}<br/>
+                        {{ $company->country }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">VAT No:</td>
+                    <td>{{ $company->vat_number }}</td>
+                </tr>
+            </table>
+        </td>
 
-    <div class="invoice-number">
-        Proforma n°: {{$invoice->proforma->proforma_number}}
-        <br/>
-        Invoice n°: {{$invoice->proforma->invoice->invoice_number}}
+        <!-- Right Column: Billed To -->
+        <td style="padding-left: 20px;">
+            <div class="section-title">Billed To</div>
+            <table class="inner-info-table" >
+                <tr >
+                    <td class="label" >Client:</td>
+                    <td>{{ $invoice->file->customer->name ?? 'CLIENT NAME' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Address:</td>
+                    <td>
+                        {{ $invoice->file->customer->address }}<br/>
+                        {{ $invoice->file->customer->post_code }} {{ $invoice->file->customer->city }}<br/>
+                        {{ $invoice->file->customer->country }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">VAT No:</td>
+                    <td>{{ $invoice->file->customer->vat_number }}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+    </div>
+    
+
+    <div>
+        <span style="font-size:12px"> Proforma n°: {{$invoice->proforma->proforma_number}} </span><br/>
+        <span style="font-size:12px"> Invoice n°: {{$invoice->invoice_number}} </span><br/>
+        <span style="font-size:10px">Due Date: {{$invoice->due_date->format('d/m/Y')}}</span><br/>
+        <span style="font-size:10px">Payment Terms (Days) : 30</span>
     </div>
 <table class="details">
     <tr>
@@ -155,26 +264,37 @@
     </tr>
 </table>
 
-<table>
-    <tr>
-        <th>Tax</th>
-        <th>Description</th>
-        <th>Qty</th>
-        <th>Amount</th>
-        <th>Total</th>
-    </tr>
-    @foreach ($invoice->items as $item)
-    <tr>
-        <td>{{ $invoice->tax_rate ?? '-' }}</td>
-        <td>{{ $item->service_name ?? 'NAN' }}</td>
-        <td>{{ $item->quantity ?? 'NAN' }}</td>
-        <td>{{ number_format($item->unit_price ) }} {{ $item->currency->code }}</td>
-        <td>{{ number_format($item->total_price) }} {{ $item->currency->code }}</td>
-    </tr>
-    @endforeach
-</table>
+<table class="items-table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">Tax</th>
+                <th style="width: 50%;">Description</th>
+                <th style="width: 10%;">Qty</th>
+                <th style="width: 15%;">Amount</th>
+                <th style="width: 15%;">Total</th>
+            </tr>
+        </thead>
+        <tbody style="min-height: 300px;">
+            @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $invoice->tax_rate ?? '-' }}</td>
+                <td>{{ $item->service_name ?? 'NAN' }}</td>
+                <td style="text-align: center;">{{ $item->quantity ?? 'NAN' }}</td>
+                <td style="text-align: right;">{{ number_format($item->unit_price, 2) }}</td>
+                <td style="text-align: right;">{{ number_format($item->total_price, 2) }}</td>
+            </tr>
+            @endforeach
+            <tr>
+                <td style="height: 250px;"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 
-    <div class="payment-container">
+    <div class="payment-container" style="font-size:12px">
         <div class="payment-details">
             <p><strong>Payment Details</strong></p>
             <p>Bank: {{$company->setting->bank_name}}</p>
@@ -198,7 +318,7 @@
     </div>
     </div>
     <hr />
-    <div class="footer">
+    <div class="footer" style="font-size:10px">
         <div class="total-container">
             <p>{{$company->name ?? ''}}</p>
         </div>
@@ -209,10 +329,7 @@
             </p>
         </div>
         <div class="total-container">
-            <p>{{$company->email}}</p>
-        </div>
-        <div class="total-container">
-            <p>{{$company->vat_number}}</p>
+            <p><span>Email</span>{{$company->email}} - <span>Vat Number:</span> {{$company->vat_number}}</p>
         </div>
     </div>
 </body>

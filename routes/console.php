@@ -13,6 +13,10 @@ Schedule::call(function (FileAssigneeReminder $reminder) {
     $reminder->sendNotification();
 })->cron('* */48 * * *');
 
+// Schedule::call(function (FileAssigneeReminder $reminder) {
+//     $reminder->sendNotification();
+// })->everyMinute();
+
 // send reminder manually
 Artisan::command('reminders:send-files', function (FileAssigneeReminder $reminder) {
     $reminder->sendNotification();

@@ -24,7 +24,9 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 // Language switcher route
-Route::redirect('/', '/login');
+Route::get('/',function(){
+    return view('auth.login');
+})->middleware(['auth']);
 
 Route::get('lang/{locale}', function ($locale) {
     $availableLocales = ['en', 'pl'];
