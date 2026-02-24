@@ -12,7 +12,10 @@ class FileAssigneeReminder {
 
     public function sendNotification(): void
     {
+        info("sending Notification");
         $files = File::where('start_date', '>', now())->where('status','pending')->get();
+        
+        info("found files ", [$files]);
         try {
             foreach ($files as $file) {
                 foreach ($file->assignees as $assignee) {
@@ -21,6 +24,7 @@ class FileAssigneeReminder {
                     if (empty($assigneeEmail)) {
                         continue; 
                     }
+                    info("sending email---->");
                     $this->mailer->send($assigneeEmail, new FileAssigneeReminderMail($file));
                 }
             }

@@ -316,9 +316,10 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-2">
                                         <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                        <form method="POST" action="#">
+                                        <form class="hidden" method="" action="">
                                             @csrf
                                             @method('DELETE')
+                                            <input type="hidden" name="assignee_id" value="{{$fileAssignee->assignee->id}}" />
                                             <button type="submit" class="text-red-600 hover:text-red-900"
                                                 onclick="return confirm('Remove this assignee?')">
                                                 Remove
