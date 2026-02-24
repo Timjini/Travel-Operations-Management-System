@@ -309,10 +309,10 @@ class FileController extends Controller
         }
 
         try {
-            $fileAssignee = FileAssignee::deleted($request->assignee_id);
+            // $fileAssignee = FileAssignee::deleted($request->assignee_id);
             info("File Assignee deleted ", ['fileAssignee' => $fileAssignee]);
             return redirect()->route('files.index', [$fileAssignee])
-                ->with('success', 'File Assignee deleted.');
+                ->with('success', 'Feature not available yet.');
         } catch (\Exception $e) {
             info("issue deleting Assignee", ['e_messages' => $e->getMessage()]);
             return back()->with('error', $e->getMessage());

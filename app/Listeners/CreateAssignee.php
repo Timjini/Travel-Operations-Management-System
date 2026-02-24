@@ -12,15 +12,21 @@ class CreateAssignee {
     public function handle(FileAssigneeCreated $event): void
     {
         try {
+            
+            $assignee = null;
+            
             if($event->data){
-               $assignee = Assignee::create([
-                    'email' => $event->data['email'],
-                    'name' => $event->data['name'],
-                    'company_info' =>  $event->data['company_info'],
-                ]);
+                
+            //   $assignee = Assignee::where(['email'=> $event->data['email']])->first()->id;
+               $assignee = Assignee::firstOrCreate(
+                    ['email' => $event->data['email']],
+                    [
+                        'name' => $event->data['name'],
+                        'company_info' =>  $event->data['company_info']
+                    ]
+                );
             }
 
-            // Against solid principle 
             if($event->data && $event->fileId)
             {
                 FileAssignee::create([

@@ -9,7 +9,7 @@
         <div class="flex flex-col items-center justify-center h-24 px-4 border-b border-gray-200">
             <a href="{{ route('dashboard') }}" class="flex items-center z-10">
                 <img 
-                    src="/crm/public/{{ $company && $company->logo_path ? Storage::url($company->logo_path) : '/crm/public/images/default-company-logo.png' }}"
+                    src="{{ $company && $company->logo_path ? Storage::url($company->logo_path) : '/crm/public/images/default-company-logo.png' }}"
                     alt="Logo"
                     class="p-2 rounded-full h-16 w-16 mx-auto md:mx-0"
                 />
@@ -109,7 +109,7 @@
                         <a href="{{ route('dashboard') }}" class="flex items-center">
                             <img 
                              class="p-2 rounded-full h-16 w-auto mx-auto md:mx-0"
-                                                src="{{ $company && $company->logo_path ? Storage::url($company->logo_path) : '/images/default-company-logo.png' }}"
+                                                src="{{ $company && $company->logo_path ? Storage::url($company->logo_path) : '/crm/public/images/default-company-logo.png' }}"
                             />
                         </a>
                     </div>
