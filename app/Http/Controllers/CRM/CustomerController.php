@@ -191,6 +191,7 @@ class CustomerController extends Controller
             return redirect()->route('customers.index')
             ->with('success', 'Customers created successfully.');
         } catch (\Throwable $e) {
+            info("csv upload error", [$e]);
             return redirect()->route('customers.index')
             ->with('error', 'Please check the csv file.');
         }
