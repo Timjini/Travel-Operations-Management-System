@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
             $user = Auth::user();
             $company = $user && $user->company_id ? $user->company : null;
             $view->with('company', $company);
+        });
+        
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post(env('LIVEWIRE_UPDATE_URL'), $handle);
         });
     }
 }

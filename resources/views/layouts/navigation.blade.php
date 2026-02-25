@@ -22,7 +22,7 @@
         <div class="z-10 flex flex-col flex-grow px-4 py-4 overflow-y-auto">
             <nav class="flex flex-col space-y-6 text-gray-800">
                 @foreach(config('navigation.sections') as $section)
-                <div class="space-y-2" x-data="{ open: true }">
+                <div class="space-y-2" x-data="{ open: false }">
                     <button 
                         @click="open = !open"
                         class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-700 focus:outline-none focus:ring focus:ring-blue-200 rounded-lg transition"
