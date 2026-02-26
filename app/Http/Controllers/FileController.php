@@ -12,6 +12,7 @@ use App\Models\File;
 use App\Models\FileAssignee;
 use App\Models\FileItem;
 use App\Models\Program;
+use App\Services\FileServices\FileAssigneeReminder;
 use App\Services\Reports\StatsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,9 +25,10 @@ class FileController extends Controller
 
     protected StatsService $stats;
 
-    public function __construct(StatsService $stats)
+    public function __construct(StatsService $stats, public FileAssigneeReminder $service)
     {
         $this->stats = $stats;
+        $this->service = $service;
     }
     /**
      * Display the files.
@@ -307,13 +309,17 @@ class FileController extends Controller
         }
 
         try {
-            $fileAssignee = FileAssignee::deleted($request->assignee_id);
+            // $fileAssignee = FileAssignee::deleted($request->assignee_id);
             info("File Assignee deleted ", ['fileAssignee' => $fileAssignee]);
             return redirect()->route('files.index', [$fileAssignee])
-                ->with('success', 'File Assignee deleted.');
+                ->with('success', 'Feature not available yet.');
         } catch (\Exception $e) {
             info("issue deleting Assignee", ['e_messages' => $e->getMessage()]);
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    public function testService(Request $request, File $file){
+        $this->service->sendNotification();
     }
 }

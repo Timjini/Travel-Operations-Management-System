@@ -30,6 +30,10 @@
     </nav>
 
     <div class="max-w-8xl px-4 sm:px-6 lg:px-8 py-6">
+        <form method="POST"  action={{route('files.test', $file)}}>
+            @csrf
+            <button type="submit"> email reminder </button>
+        </form>
         <div class="bg-white shadow rounded-lg overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
                 <div class="flex justify-between items-center">
@@ -312,9 +316,10 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-2">
                                         <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                        <form method="POST" action="#">
+                                        <form class="hidden" method="" action="">
                                             @csrf
                                             @method('DELETE')
+                                            <input type="hidden" name="assignee_id" value="{{$fileAssignee->assignee->id}}" />
                                             <button type="submit" class="text-red-600 hover:text-red-900"
                                                 onclick="return confirm('Remove this assignee?')">
                                                 Remove

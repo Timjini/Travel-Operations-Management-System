@@ -17,9 +17,16 @@ use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSettingController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Country;
+use App\Models\Customer;
+use App\Models\Destination;
+use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 // Language switcher route
-Route::redirect('/', '/login');
+Route::get('/',function(){
+    return view('auth.login');
+})->middleware(['auth']);
 
 Route::get('lang/{locale}', function ($locale) {
     $availableLocales = ['en', 'pl'];
@@ -96,6 +103,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/{file}', [FileController::class, 'update'])->name('files.update');
     Route::delete('/{file}', [FileController::class, 'destroy'])->name('files.destroy');
     Route::get('/export', [FileController::class, 'index'])->name('files.export');
+
+    Route::post('/{file}/test-service', [FileController::class, 'testService'])->name('files.test');
 
     Route::post('/{file}/assignee-create', [FileController::class, 'createFileAssignee'])->name('files.assignee.create');
     Route::delete('/{file}/assignee-delete', [FileController::class, 'removeFileAssignee'])->name('files.assignee.delete');
@@ -189,6 +198,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [ReportController::class, 'generate'])->name('reports.generate');
         Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
      });
+     
+     Route::get('/api/countries', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Country::where('name', 'like', "%{$searchTerm}%")
+        ->limit(10)
+        ->get(['id', 'name']);
+});
+
+Route::get('/api/customers', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Customer::where('name', 'like', "%{$searchTerm}%")
+    ->orWhere('email', 'like', "%{$searchTerm}%")
+        ->limit(10)
+        ->get(['id', 'name', 'email']);
+});
+
+Route::get('/api/destinations', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Destination::where('name', 'like', "%{$searchTerm}%")
+        ->orWhere('city', 'like', '%{$searchTerm}%')
+        ->limit(10)
+        ->get(['id', 'name', 'city']);
+});
+
+Route::get('/api/suppliers', function (Request $request) {
+      $searchTerm = request('search');
+
+    return Supplier::where('name', 'like', "%{$searchTerm}%")
+        ->orWhere('email', 'like', '%{$searchTerm}%')
+        ->limit(10)
+        ->get(['id', 'name', 'email']);
+});
 });
 
 require __DIR__.'/auth.php';
