@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Country;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -21,10 +22,11 @@ class DestinationSeeder extends Seeder
         ];
 
         foreach ($destinations as $dest) {
+            $country_id = Country::where(['name'=>$dest['country']])->first()->id;
             DB::table('destinations')->insert([
                 'id' => (string) Str::uuid(),
                 'name' => $dest['name'],
-                'country' => $dest['country'],
+                'country_id' => $country_id,
                 'description' => $dest['description'],
                 'company_id' => $firstCompany->id,
                 'created_at' => now(),
