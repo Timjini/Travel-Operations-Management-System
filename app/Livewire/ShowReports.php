@@ -37,7 +37,12 @@ class ShowReports extends Component
 
     public function getReportDataProperty()
     {
-        $companyId = Auth::user()->company_id;
+        $companyId = Auth::user()->company_id ?? null;
+
+        if(!$companyId){
+            return null;
+        }
+        
         $startDate = $this->start_date;
         $endDate = $this->end_date;
 

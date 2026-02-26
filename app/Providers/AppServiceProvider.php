@@ -33,13 +33,8 @@ class AppServiceProvider extends ServiceProvider
             $view->with('company', $company);
         });
         
-        Livewire::setScriptRoute(function ($handle) {
-        return Route::get('/crm/livewire/livewire.js', $handle);
-    });
-
-    // Fix the AJAX update endpoint
-    Livewire::setUpdateRoute(function ($handle) {
-        return Route::post('/crm/livewire/update', $handle);
-    });
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post(env('LIVEWIRE_UPDATE_URL'), $handle);
+        });
     }
 }
