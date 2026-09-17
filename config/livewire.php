@@ -158,5 +158,5 @@ return [
 
     'pagination_theme' => 'tailwind',
     
-    'asset_url' => env('LIVEWIRE_URL'),
+   'asset_url' => 'https://emotions-morocco.com/crm',
 ];

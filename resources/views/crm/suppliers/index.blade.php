@@ -56,7 +56,7 @@
 
 
         <!-- Table -->
-        <div class="max-w-7xl overflow-x-auto bg-white shadow rounded-lg">
+        <div class="max-w-7xl overflow-x-auto bg-white shadow rounded-lg md:flex hidden flex-col">
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-100">
                     <tr>
@@ -94,6 +94,88 @@
                 </tbody>
             </table>
         </div>
+        
+        <div class="max-w-7xl bg-slate-900 border border-slate-800 shadow-xl rounded-xl overflow-hidden">
+                <!-- Mobile Card View (Visible on screens smaller than md) -->
+                <div class="block md:hidden divide-y divide-slate-800">
+                    @forelse ($suppliers as $supplier)
+                        <div class="p-4 space-y-3 bg-slate-900/60 hover:bg-slate-800/40 transition-colors">
+                            <!-- Header: Name & Action Buttons -->
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <div>
+                                    <h4 class="text-sm font-bold">{{ $supplier->name }}</h4>
+                                    <p class="text-[11px] text-slate-400">{{ $supplier->created_at->format('Y-m-d') }}</p>
+                                </div>
+                                <div class="shrink-0">
+                                    <x-action-buttons 
+                                        viewRoute="{{ route('suppliers.show', $supplier) }}"
+                                        editRoute="{{ route('suppliers.edit', $supplier) }}"
+                                        deleteRoute="{{ route('suppliers.destroy', $supplier) }}"
+                                    />
+                                </div>
+                            </div>
+            
+                            <!-- Body Details Grid -->
+                            <div class="grid grid-cols-1 gap-2 text-xs">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-medium text-slate-500 uppercase tracking-wider text-[10px]">Email</span>
+                                    <a href="mailto:{{ $supplier->email }}" class="text-blue-400 hover:underline truncate max-w-[200px]">{{ $supplier->email }}</a>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="font-medium text-slate-500 uppercase tracking-wider text-[10px]">Phone</span>
+                                    <a href="tel:{{ $supplier->phone_1 }}" class="text-slate-300 hover:text-white">{{ $supplier->phone_1 ?? 'N/A' }}</a>
+                                </div>
+                                <div class="flex items-start justify-between">
+                                    <span class="font-medium text-slate-500 uppercase tracking-wider text-[10px]">Address</span>
+                                    <span class="text-slate-300 text-right truncate max-w-[200px]">{{ $supplier->address ?? 'N/A' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="p-6 text-center text-slate-500 text-sm">No suppliers found.</div>
+                    @endforelse
+                </div>
+            
+                <!-- Desktop Table View (Visible on md screens and up) -->
+                <div class="hidden md:block overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-800 text-sm text-left">
+                        <thead class="bg-slate-950/60">
+                            <tr>
+                                <th scope="col" class="px-6 py-3.5 font-semibold text-slate-400 uppercase tracking-wider text-xs">Name</th>
+                                <th scope="col" class="px-6 py-3.5 font-semibold text-slate-400 uppercase tracking-wider text-xs">Email</th>
+                                <th scope="col" class="px-6 py-3.5 font-semibold text-slate-400 uppercase tracking-wider text-xs">Phone</th>
+                                <th scope="col" class="px-6 py-3.5 font-semibold text-slate-400 uppercase tracking-wider text-xs">Address</th>
+                                <th scope="col" class="px-6 py-3.5 font-semibold text-slate-400 uppercase tracking-wider text-xs">Created</th>
+                                <th scope="col" class="px-6 py-3.5 font-semibold text-slate-400 uppercase tracking-wider text-xs text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/60 bg-slate-900/40">
+                            @forelse ($suppliers as $supplier)
+                                <tr class="hover:bg-slate-800/40 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap font-medium text-white">{{ $supplier->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-slate-300">{{ $supplier->email }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-slate-300">{{ $supplier->phone_1 }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-slate-300 max-w-xs truncate">{{ $supplier->address }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-slate-400 text-xs">
+                                        {{ $supplier->created_at->format('Y-m-d') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                                        <x-action-buttons 
+                                            viewRoute="{{ route('suppliers.show', $supplier) }}"
+                                            editRoute="{{ route('suppliers.edit', $supplier) }}"
+                                            deleteRoute="{{ route('suppliers.destroy', $supplier) }}"
+                                        />
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-slate-500">No suppliers found.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         <!-- Pagination -->
         <div class="mt-6">

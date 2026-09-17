@@ -63,7 +63,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <a href="{{ $proforma->file?->id ? route('files.show', $proforma->file_id) : '#' }}" class="text-blue-600 hover:underline">
-                                    {{ $proforma->file?->file_number ?? 'N/A' }}
+                                    {{ $proforma->file?->reference ?? 'N/A' }}
                                 </a>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -86,6 +86,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
+                                    <x-link-button :href="route('proformas.download.pdf', $proforma)" size="sm">
+                                        PDF
+                                    </x-link-button>
                                     <x-link-button :href="route('proformas.edit', $proforma)" size="sm">
                                         Edit
                                     </x-link-button>

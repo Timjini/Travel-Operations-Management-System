@@ -100,7 +100,7 @@
     @php 
         $companySetting = Auth::user()->company->setting ?? null; 
         $company = Auth::user()->company ?? null; 
-        $customer = $invoice->file->customer ?? null; 
+        $customer = $proforma->file->customer ?? null; 
     @endphp
 
     <table class="header">
@@ -109,10 +109,9 @@
                 <img src="{{ public_path('images/emotions-morocco-logo.webp') }}" class="logo_image" />
             </td>
             <td style="vertical-align: top;" class="title">
-                Invoice
+                Proforma Invoice
                 <div style="font-size: 11px; font-family: sans-serif; color: #554e48; margin-top: 5px;">
-                    <strong>Proforma N°:</strong> {{$invoice->proforma->proforma_number}}<br>
-                    <strong>Invoice N°:</strong> {{$invoice->invoice_number}}
+                    <strong>Proforma N°:</strong> {{$proforma->proforma_number}}<br>
                 </div>
             </td>
         </tr>
@@ -120,10 +119,10 @@
 
     <table class="details-box">
         <tr>
-            <td><strong>File Ref:</strong> {{ $invoice->file->reference ?? 'N/A'}}</td>
-            <td><strong>Destination:</strong> {{ $invoice->file->destination->name ?? 'N/A' }}</td>
-            <td><strong>Date:</strong> {{ $invoice->file->start_date ? \Carbon\Carbon::parse($invoice->file->start_date)->format('d/m/Y') : 'N/A' }}</td>
-            <td><strong>Due Date:</strong> {{$invoice->due_date->format('d/m/Y')}}</td>
+            <td><strong>File Ref:</strong> {{ $proforma->file->reference ?? 'N/A'}}</td>
+            <td><strong>Destination:</strong> {{ $proforma->file->destination->name ?? 'N/A' }}</td>
+            <td><strong>Date:</strong> {{ $proforma->file->start_date ? \Carbon\Carbon::parse($proforma->file->start_date)->format('d/m/Y') : 'N/A' }}</td>
+            <td><strong>Due Date:</strong> {{$proforma->due_date->format('d/m/Y')}}</td>
         </tr>
     </table>
 
@@ -138,10 +137,10 @@
             </td>
             <td>
                 <div class="section-label">Billed To</div>
-                <strong>{{ $invoice->file->customer->name ?? 'CLIENT NAME' }}</strong><br>
-                {{ $invoice->file->customer->address }}<br>
-                {{ $invoice->file->customer->post_code }} {{ $invoice->file->customer->city }}, {{ $invoice->file->customer->country }}<br>
-                <span style="font-size: 11px; color: #666;">VAT: {{ $invoice->file->customer->vat_number }}</span>
+                <strong>{{ $proforma->file->customer->name ?? 'CLIENT NAME' }}</strong><br>
+                {{ $proforma->file->customer->address }}<br>
+                {{ $proforma->file->customer->post_code }} {{ $proforma->file->customer->city }}, {{ $proforma->file->customer->country }}<br>
+                <span style="font-size: 11px; color: #666;">VAT: {{ $proforma->file->customer->vat_number }}</span>
             </td>
         </tr>
     </table>
@@ -157,9 +156,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($invoice->items as $item)
+            @foreach ($proforma->file->items as $item)
             <tr>
-                <td>{{ $invoice->tax_rate ?? '-' }}</td>
+                <td>{{ $proforma->tax_rate ?? '-' }}</td>
                 <td>{{ $item->service_name ?? 'N/A' }}</td>
                 <td style="text-align: center;">{{ $item->quantity ?? '0' }}</td>
                 <td style="text-align: right;">{{ number_format($item->unit_price, 2) }}</td>
@@ -183,15 +182,15 @@
                     <table style="width: 100%; font-size: 12px;">
                         <tr>
                             <td>Subtotal:</td>
-                            <td style="text-align: right;">{{ number_format($invoice->items->sum('total_price'), 2) }} {{ $invoice->currency->code }}</td>
+                            <td style="text-align: right;">{{ number_format($proforma->file->items->sum('total_price'), 2) }} {{ $proforma->currency->code }}</td>
                         </tr>
                         <tr>
                             <td>Tax (0%):</td>
-                            <td style="text-align: right;">0.00 {{ $invoice->currency->code }}</td>
+                            <td style="text-align: right;">0.00 {{ $proforma->currency->code }}</td>
                         </tr>
                         <tr style="font-weight: bold; font-size: 14px; color: #8c6d46;">
                             <td style="padding-top: 8px;">Total Due:</td>
-                            <td style="padding-top: 8px; text-align: right;">{{ number_format($invoice->total_amount, 2) }} {{ $invoice->currency->code }}</td>
+                            <td style="padding-top: 8px; text-align: right;">{{ number_format($proforma->total_amount, 2) }} {{ $proforma->currency->code }}</td>
                         </tr>
                     </table>
                 </div>

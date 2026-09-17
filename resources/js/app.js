@@ -10,8 +10,8 @@ Alpine.plugin(collapse)
 
 window.Alpine = Alpine;
 
-if (window.Livewire) {
-    window.Livewire.start();
-}
+// if (window.Livewire) {
+//     window.Livewire.start();
+// }
 
 Alpine.start();

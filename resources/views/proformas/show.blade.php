@@ -8,9 +8,9 @@
     <div class="max-w-6xl px-4 sm:px-6 lg:px-8 py-6">
         <div class="bg-white shadow rounded-lg overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center flex-wrap align-center gap-2">
                     <h3 class="text-lg font-medium text-gray-900">Proforma #{{ $proforma->proforma_number }}</h3>
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2 gap-2 flex-wrap">
                         <x-link-button :href="route('proformas.edit', $proforma)">
                             Edit
                         </x-link-button>
@@ -21,6 +21,10 @@
                                 Delete
                             </button>
                         </form>
+                        
+                          <x-secondary-link :href="route('proformas.download.pdf', $proforma)">
+                                View PDF
+                        </x-secondary-link>
             
                         @if($proforma->invoice && ($proforma->invoice->status === 'unpaid' || $proforma->invoice->status === 'paid'))
                             <!-- Show link to invoice if invoice exists and status is unpaid or paid -->

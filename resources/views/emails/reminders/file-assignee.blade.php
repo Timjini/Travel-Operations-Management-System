@@ -2,7 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Proforma Invoice #{{  }}</title>
+<!-- FIXED: Added $file->reference or $file->id here -->
+<title>Proforma Invoice #{{ $file->reference ?? $file->id }}</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -43,10 +44,12 @@
         font-size: 12px;
         border-radius: 6px;
     }
+    /* These match your $file->status classes */
     .badge.draft { background: #f3f4f6; color: #374151; }
     .badge.sent { background: #dbeafe; color: #1e40af; }
     .badge.paid { background: #dcfce7; color: #166534; }
     .badge.overdue { background: #fee2e2; color: #991b1b; }
+    
     table {
         width: 100%;
         border-collapse: collapse;
@@ -74,24 +77,22 @@
         font-size: 14px;
         text-decoration: none;
     }
-    .btn:hover {
-        background: #1e40af;
-    }
 </style>
-
+</head>
 <body>
     <div class="container">
         <!-- Header -->
         <div class="header">
             <h2>File #{{ $file->id }}</h2>
-            <span class="badge {{ }}">
+            <!-- FIXED: Added $file->status to the class list -->
+            <span class="badge {{ $file->status }}">
                 {{ ucfirst($file->status) }}
             </span>
         </div>
 
-        <div class="content" style="padding: 20px 0; line-height: 1.6; color: #333;">
+        <div class="content" style="padding: 20px; line-height: 1.6; color: #333;">
             <p>Dear Team,</p>
-            <p>This is a reminder regarding the processing of <strong>File #{{ $file->reference }}</strong>. The file is currently marked as <strong>{{ strtoupper($file->status) }}</strong> and requires your immediate attention to proceed to the next stage of the workflow.</p>
+            <p>This is a reminder regarding the processing of <strong>File #{{ $file->reference }}</strong>. The file is currently marked as <strong>{{ strtoupper($file->status) }}</strong> and requires your immediate attention.</p>
             
             <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
                 <strong>File Summary:</strong><br>
@@ -100,22 +101,22 @@
                 • <strong>Start Date:</strong> {{ \Carbon\Carbon::parse($file->start_date)->format('M d, Y') }}
             </div>
     
-            <p>Please review the file details in the ERP system and update the status accordingly to ensure a seamless experience for our clients.</p>
-            
             <p style="margin-top: 25px;">
-                <a href="{{ config('app.url') }}/files/{{ $file->id }}" 
-                   style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                <a href="{{ url('/files/' . $file->id) }}" 
+                   style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
                    View File Details
                 </a>
             </p>
         </div>
+
         <div class="footer">
             Created {{ $file->created_at->format('M d, Y H:i') }}
+            @if(isset($proforma))
             | Last updated {{ $proforma->updated_at->format('M d, Y H:i') }}
+            @endif
             <br><br>
             {{ config('app.name') }}
         </div>
     </div>
 </body>
-
 </html>

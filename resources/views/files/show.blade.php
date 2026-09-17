@@ -32,9 +32,9 @@
     <div class="max-w-8xl px-4 sm:px-6 lg:px-8 py-6">
         <div class="bg-white shadow rounded-lg overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center flex-wrap gap-2">
                     <h3 class="text-lg font-medium text-gray-900">File Information</h3>
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2  items-center">
                         <!-- Dropdown menu -->
                         <div class="relative inline-block text-left" x-data="{ open: false }" @click.away="open = false">
                             <button type="button"
@@ -239,7 +239,7 @@
         <div class="bg-gray-200 shadow rounded-lg overflow-hidden mt-4" x-data="{ open: false }">
             <!-- Table Header with Create Button -->
             <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center align-center flex-wrap gap-2">
                     <h3 class="text-lg font-medium text-gray-900">File Assignees</h3>
                     <x-primary-button @click="open = !open">
                         {{ __('Add New Assignee') }}
@@ -312,9 +312,10 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-2">
                                         <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                        <form method="POST" action="#">
+                                        <form class="hidden" method="" action="">
                                             @csrf
                                             @method('DELETE')
+                                            <input type="hidden" name="assignee_id" value="{{$fileAssignee->assignee->id}}" />
                                             <button type="submit" class="text-red-600 hover:text-red-900"
                                                 onclick="return confirm('Remove this assignee?')">
                                                 Remove
