@@ -56,7 +56,7 @@
         </form>
 
         <!-- Bookings Table -->
-        <div class="bg-white shadow rounded-lg overflow-hidden">
+        <div class="bg-white shadow rounded-lg overflow-hidden md:flex hidden flex-col">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -208,7 +208,197 @@
                 {{ $files->appends(request()->query())->links() }}
             </div>
         </div>
-    </div>
+        </div>
+        
+        <div class="bg-white border border-blue-200 shadow-xl rounded-xl overflow-hidden">
+            <!-- Mobile Card View (Visible on screens smaller than md) -->
+            <div class="block md:hidden divide-y divide-slate-800">
+                @forelse ($files as $file)
+                    @php
+                        $statusClasses = [
+                            'confirmed' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+                            'pending'   => 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+                            'cancelled' => 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                        ][$file->status] ?? 'bg-slate-800 text-slate-300 border-slate-700';
+                    @endphp
+        
+                    <div class="p-4 space-y-3 bg-slate-900/60 hover:bg-slate-800/40 transition-colors">
+                        <!-- Header: Reference, Status Badge & Action Buttons -->
+                        <div class="flex items-start justify-between border-b border-slate-800/60 pb-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="h-8 w-8 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-center justify-center shrink-0">
+                                    <svg class="h-4 w-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold flex items-center space-x-2">
+                                        <span>{{ $file->reference }}</span>
+                                        <span class="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full border {{ $statusClasses }}">
+                                            {{ ucfirst($file->status) }}
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-slate-400">Created: {{ $file->created_at->format('M d, Y') }}</div>
+                                </div>
+                            </div>
+                            <div class="shrink-0">
+                                <x-action-buttons
+                                    viewRoute="{{ route('files.show', $file->id) }}"
+                                    editRoute="{{ route('files.edit', $file->id) }}"
+                                    deleteRoute="{{ route('files.destroy', $file->id) }}" />
+                            </div>
+                        </div>
+        
+                        <!-- Customer Details -->
+                        <div class="bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/50 text-xs space-y-1">
+                            <div class="font-semibold text-slate-200">{{ $file->customer->name }}</div>
+                            <div class="text-slate-400 truncate">{{ $file->customer->email }}</div>
+                        </div>
+        
+                        <!-- Key Travel Info Grid -->
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <span class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider">Program</span>
+                                <span class="text-slate-300 font-medium truncate block">{{ $file->program->name ?? 'N/A' }}</span>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider">Destination</span>
+                                <span class="text-slate-300 font-medium truncate block">{{ $file->destination->name ?? 'N/A' }}</span>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider">Travel Dates</span>
+                                <span class="text-slate-300">
+                                    {{ $file->start_date->format('M d') }} - {{ $file->end_date->format('M d, Y') }}
+                                </span>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] font-medium text-slate-500 uppercase tracking-wider">Duration / Travelers</span>
+                                <span class="text-slate-300">
+                                    {{ $file->start_date->diffInDays($file->end_date) }} days ({{ $file->number_of_people }} pax)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-6 text-center text-slate-500 text-sm">
+                        No booking files found. <a href="{{ route('files.create') }}" class="text-blue-400 hover:underline">Create one now</a>
+                    </div>
+                @endforelse
+            </div>
+        
+            <!-- Desktop Table View (Visible on md screens and up) -->
+            <div class="hidden md:block overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-800 text-sm text-left">
+                    <thead class="bg-slate-950/60">
+                        <tr>
+                            <th scope="col" class="px-6 py-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors" onclick="sortBy('reference')">
+                                <div class="flex items-center space-x-1">
+                                    <span>Reference</span>
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                    </svg>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors" onclick="sortBy('customer_name')">
+                                <div class="flex items-center space-x-1">
+                                    <span>Customer</span>
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                    </svg>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                Travel Details
+                            </th>
+                            <th scope="col" class="px-6 py-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors" onclick="sortBy('start_date')">
+                                <div class="flex items-center space-x-1">
+                                    <span>Dates</span>
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                    </svg>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider cursor-pointer hover:text-white transition-colors" onclick="sortBy('status')">
+                                <div class="flex items-center space-x-1">
+                                    <span>Status</span>
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                    </svg>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3.5 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 bg-slate-900/40">
+                        @forelse ($files as $file)
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="h-8 w-8 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-center justify-center shrink-0">
+                                            <svg class="h-4 w-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-semibold ">{{ $file->reference }}</div>
+                                            <div class="text-xs text-slate-400">{{ $file->created_at->format('M d, Y') }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-slate-200">{{ $file->customer->name }}</div>
+                                    <div class="text-xs text-slate-400">{{ $file->customer->email }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-xs space-y-0.5">
+                                    <div class="text-slate-200"><span class="text-slate-500 font-medium">Program:</span> {{ $file->program->name ?? 'N/A' }}</div>
+                                    <div class="text-slate-400"><span class="text-slate-500 font-medium">Destination:</span> {{ $file->destination->name ?? 'N/A' }}</div>
+                                    <div class="text-slate-400"><span class="text-slate-500 font-medium">People:</span> {{ $file->number_of_people }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-xs">
+                                    <div class="text-slate-200 font-medium">
+                                        {{ $file->start_date->format('M d, Y') }} &rarr; {{ $file->end_date->format('M d, Y') }}
+                                    </div>
+                                    <div class="text-slate-400">
+                                        {{ $file->start_date->diffInDays($file->end_date) }} days
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        $statusClasses = [
+                                            'confirmed' => 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+                                            'pending'   => 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+                                            'cancelled' => 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                                        ][$file->status] ?? 'bg-slate-800 text-slate-300 border-slate-700';
+                                    @endphp
+                                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full border {{ $statusClasses }}">
+                                        {{ ucfirst($file->status) }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <x-action-buttons
+                                        viewRoute="{{ route('files.show', $file->id) }}"
+                                        editRoute="{{ route('files.edit', $file->id) }}"
+                                        deleteRoute="{{ route('files.destroy', $file->id) }}" />
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                                    No booking files found. <a href="{{ route('files.create') }}" class="text-blue-400 hover:underline">Create one now</a>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        
+            <!-- Pagination Footer -->
+            <div class="bg-slate-950/60 px-4 py-3 border-t border-slate-800 sm:px-6">
+                {{ $files->appends(request()->query())->links() }}
+            </div>
+        </div>
 
     @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

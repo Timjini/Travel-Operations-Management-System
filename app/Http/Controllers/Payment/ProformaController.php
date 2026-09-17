@@ -12,6 +12,7 @@ use App\Services\FileServices\ProformaService;
 use App\Services\Proformas\ProformaMailerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProformaController extends Controller
 {
@@ -134,5 +135,24 @@ class ProformaController extends Controller
             return redirect()->route('proformas.show', $proforma->id)
                 ->with('error', 'Failed to send proforma: ' . $e->getMessage());
         }
+    }
+    
+       public function downloadPdf($id)
+    {
+        $proforma = Proforma::with(['file', 'file.customer', 'currency'])
+            ->findOrFail($id);
+
+        // Pass company setting to the view
+        $companySetting = $proforma->file->company->setting ?? null; // if file has company relation
+        $company = $proforma->file->company ?? null;
+
+        $pdf = Pdf::loadView('proformas.pdf', [
+            'proforma' => $proforma,
+            'companySetting' => $companySetting,
+            'company' => $company
+        ]);
+
+        // return $pdf->download('invoice-'.$invoice->invoice_number.'.pdf');
+        return $pdf->stream('proforma-'.$proforma->reference.'.pdf');
     }
 }

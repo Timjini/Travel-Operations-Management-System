@@ -47,25 +47,31 @@
 
 
 
-    <div class="flex flex-col md:flex-row h-screen bg-gradient-to-br from-white via-[#BEC2CB] to-[#f5f5f5] relative overflow-hidden">
-            <div class="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-[#c4d7ff]/40 to-[#ffffff]/0 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-20 right-32 w-96 h-96 bg-gradient-to-l from-[#d4f1ff]/50 to-[#ffffff]/0 rounded-full blur-3xl"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.2),transparent_70%)]"></div>
-        @include('layouts.navigation')
-        <div class="z-10 flex-1 p-4 overflow-auto">
-            @isset($header)
-            <header class="mt-4 p-1">
-                <div class="max-w-3xl sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-            @endisset
+    <!--<div class="flex flex-col md:flex-row h-screen bg-gradient-to-br from-slate-50 via-blue-50/80 to-indigo-50/20 relative overflow-hidden">-->
+    <div class="flex flex-col md:flex-row h-screen bg-blue-50 relative overflow-hidden">
+    <!-- Subtle Mesh Grid Pattern -->
+    <div class="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
+    
+    <!-- Soft Organic Glows -->
+    <div class="absolute top-0 right-1/4 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 left-10 w-96 h-96 bg-purple-300/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
+    @include('layouts.navigation')
+
+    <div class="z-10 flex-1 p-4 md:p-6 overflow-auto">
+        @isset($header)
+        <header class="mt-2 mb-4 p-1">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                {{ $header }}
+            </div>
+        </header>
+        @endisset
+
+        <main class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{ $slot }}
+        </main>
     </div>
+</div>
     @livewireScripts
     @livewire('livewire-ui-modal')
 

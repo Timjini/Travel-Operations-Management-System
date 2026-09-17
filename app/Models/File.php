@@ -62,7 +62,7 @@ class File extends Model
             }
 
             if (empty($model->reference)) {
-                $model->reference = 'REF-' . now()->format('Ymd') . '-' . random_int(1000, 9999);
+                $model->reference = 'EM-' . random_int(1, 100) . '-' . now()->format('m/Y');
             }
         });
     }

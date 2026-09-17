@@ -178,49 +178,48 @@
         </div>
     </div>
 
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add new item
-            document.getElementById('add-item').addEventListener('click', function() {
-                const container = document.getElementById('items-container');
-                const index = document.querySelectorAll('.item-row').length;
-                
-                const template = `
-                    <div class="item-row mb-4 p-4 border border-gray-200 rounded-lg">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <x-input-label for="items[${index}][service_name]" :value="__('Service Name')" />
-                                <x-text-input id="items[${index}][service_name]" name="items[${index}][service_name]" type="text" class="mt-1 block w-full" required />
-                            </div>
-                            <div>
-                                <x-input-label for="items[${index}][description]" :value="__('Description')" />
-                                <x-text-input id="items[${index}][description]" name="items[${index}][description]" type="text" class="mt-1 block w-full" />
-                            </div>
-                            <div>
-                                <x-input-label for="items[${index}][quantity]" :value="__('Quantity')" />
-                                <x-text-input id="items[${index}][quantity]" name="items[${index}][quantity]" type="number" step="1" class="mt-1 block w-full" required />
-                            </div>
-                            <div>
-                                <x-input-label for="items[${index}][unit_price]" :value="__('Unit Price')" />
-                                <x-text-input id="items[${index}][unit_price]" name="items[${index}][unit_price]" type="number" step="0.01" class="mt-1 block w-full" required />
-                            </div>
+   @push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add new item
+        document.getElementById('add-item').addEventListener('click', function() {
+            const container = document.getElementById('items-container');
+            const index = document.querySelectorAll('.item-row').length;
+            
+            const template = `
+                <div class="item-row mb-4 p-4 border border-gray-200 rounded-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label for="items[${index}][service_name]" class="block font-medium text-sm text-gray-700">Service Name</label>
+                            <input id="items[${index}][service_name]" name="items[${index}][service_name]" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
                         </div>
-                        <button type="button" class="mt-2 text-red-600 text-sm hover:text-red-900 remove-item">Remove</button>
+                        <div>
+                            <label for="items[${index}][description]" class="block font-medium text-sm text-gray-700">Description</label>
+                            <input id="items[${index}][description]" name="items[${index}][description]" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
+                        </div>
+                        <div>
+                            <label for="items[${index}][quantity]" class="block font-medium text-sm text-gray-700">Quantity</label>
+                            <input id="items[${index}][quantity]" name="items[${index}][quantity]" type="number" step="1" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
+                        </div>
+                        <div>
+                            <label for="items[${index}][unit_price]" class="block font-medium text-sm text-gray-700">Unit Price</label>
+                            <input id="items[${index}][unit_price]" name="items[${index}][unit_price]" type="number" step="0.01" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required />
+                        </div>
                     </div>
-                `;
-                
-                container.insertAdjacentHTML('beforeend', template);
-            });
-
-            // Remove item
-            document.getElementById('items-container').addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-item')) {
-                    e.target.closest('.item-row').remove();
-                    // Re-index remaining items if needed
-                }
-            });
+                    <button type="button" class="mt-2 text-red-600 text-sm hover:text-red-900 remove-item">Remove</button>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', template);
         });
-    </script>
-    @endpush
+
+        // Remove item
+        document.getElementById('items-container').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item')) {
+                e.target.closest('.item-row').remove();
+            }
+        });
+    });
+</script>
+@endpush
 </x-app-layout>

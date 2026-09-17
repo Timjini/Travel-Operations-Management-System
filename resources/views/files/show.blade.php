@@ -30,15 +30,11 @@
     </nav>
 
     <div class="max-w-8xl px-4 sm:px-6 lg:px-8 py-6">
-        <form method="POST"  action={{route('files.test', $file)}}>
-            @csrf
-            <button type="submit"> email reminder </button>
-        </form>
         <div class="bg-white shadow rounded-lg overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center flex-wrap gap-2">
                     <h3 class="text-lg font-medium text-gray-900">File Information</h3>
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2  items-center">
                         <!-- Dropdown menu -->
                         <div class="relative inline-block text-left" x-data="{ open: false }" @click.away="open = false">
                             <button type="button"
@@ -243,7 +239,7 @@
         <div class="bg-gray-200 shadow rounded-lg overflow-hidden mt-4" x-data="{ open: false }">
             <!-- Table Header with Create Button -->
             <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center align-center flex-wrap gap-2">
                     <h3 class="text-lg font-medium text-gray-900">File Assignees</h3>
                     <x-primary-button @click="open = !open">
                         {{ __('Add New Assignee') }}

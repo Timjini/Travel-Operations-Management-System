@@ -127,38 +127,49 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the invoice
      */
-    // public function edit($id): View
-    // {
-    //     // $invoice = Invoice::with(['file', 'items'])->findOrFail($id);
-    //     // $currencies = Currency::all();
-    //     // $statuses = ['unpaid', 'paid', 'cancelled', 'refunded'];
+    public function edit($id): View
+    {
+        $invoice = Invoice::with(['file', 'items'])->findOrFail($id);
+        $currencies = Currency::all();
+        $statuses = ['unpaid', 'paid', 'cancelled', 'refunded'];
 
 
-    //     // return view('invoices.edit', [
-    //     //     'invoice' => $invoice,
-    //     //     'currencies' => $currencies,
-    //     //     'statuses' => $statuses,
-    //     //     'proforma' => $invoice->proforma,
-    //     //     'file' => $invoice->file,
-    //     // ]);
-    // }
+        return view('invoices.edit', [
+            'invoice' => $invoice,
+            'currencies' => $currencies,
+            'statuses' => $statuses,
+            'proforma' => $invoice->proforma,
+            'file' => $invoice->file,
+        ]);
+    }
 
     /**
      * Update the specified invoice
      */
-    public function update(Request $request, $id): RedirectResponse
+   /**
+ * Update the specified invoice
+ */
+    public function update(Request $request, Invoice $invoice): RedirectResponse
     {
-        $invoice = Invoice::findOrFail($id);
-
         $validated = $request->validate([
+            'invoice_number' => 'required|string|max:255',
+            'file_id' => 'required|exists:files,id',
+            'proforma_id' => 'nullable|exists:proformas,id',
+            'issue_date' => 'required|date',
             'due_date' => 'nullable|date',
             'currency_id' => 'nullable|exists:currencies,id',
-            'status' => 'required|in:unpaid,paid,cancelled,refunded',
+            'status' => 'required|in:draft,sent,unpaid,paid,cancelled,refunded',
+            'total_amount' => 'required|numeric',
             'notes' => 'nullable|string',
+            'items' => 'nullable|array',
+            'items.*.service_name' => 'required|string',
+            'items.*.description' => 'nullable|string',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric',
         ]);
-
+    
         $invoice->update($validated);
-
+    
         return redirect()->route('invoices.show', $invoice->id)
             ->with('success', 'Invoice updated successfully.');
     }
@@ -274,36 +285,33 @@ class InvoiceController extends Controller
         return $pdf->stream('invoice-'.$invoice->invoice_number.'.pdf');
     }
 
-    public function send(Invoice $invoice, InvoiceMailerService $service)
-    {
-        // Check if proforma has items
-        if ($invoice->file->items === null || $invoice->file->items->isEmpty()) {
-            return redirect()->route('invoices.show', $invoice->id)
-                ->with('error', 'Please add at least one item!');
+
+        public function send(Request $request, Invoice $invoice, InvoiceMailerService $service)
+        {
+            // Validate the incoming recipient email
+            $validated = $request->validate([
+                'recipient_email' => 'required|email',
+            ]);
+        
+            $recipientEmail = $validated['recipient_email'];
+        
+            // Check if invoice/file has items
+            if ($invoice->file->items === null || $invoice->file->items->isEmpty()) {
+                return redirect()->route('invoices.show', $invoice->id)
+                    ->with('error', 'Please add at least one item!');
+            }
+        
+            try {
+                // Pass the selected recipient email string to your service
+                $service->sendProforma($invoice, $recipientEmail);
+        
+                return redirect()->route('invoices.show', $invoice->id)
+                    ->with('success', "Invoice sent successfully to {$recipientEmail}!");
+        
+            } catch (\Exception $e) {
+                return redirect()->route('invoices.show', $invoice->id)
+                    ->with('error', 'Failed to send invoice: ' . $e->getMessage());
+            }
         }
-    
-        // Check if customer email exists
-        if (empty($invoice->file->customer->email)) {
-            return redirect()->route('invoices.show', $invoice->id)
-                ->with('error', 'Customer email is missing!');
-        }
-    
-        try {
-            $service->sendProforma($invoice, $invoice->file->customer->email);
-            
-            // Dispatch success event
-            // ProformaSent::dispatch($invoice, Auth::user());
-            
-            return redirect()->route('invoices.show', $invoice->id)
-                ->with('success', 'Invoice sent successfully!');
-    
-        } catch (\Exception $e) {
-            // Dispatch failure event
-            // ProformaSendFailed::dispatch($invoice, Auth::user(), $e->getMessage());
-            
-            return redirect()->route('invoices.show', $invoice->id)
-                ->with('error', 'Failed to send invoice: ' . $e->getMessage());
-        }
-    }
 
 }

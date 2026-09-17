@@ -30,9 +30,13 @@
                             </x-danger-button>
                         </form>
                         
-                          <x-secondary-link :href="route('invoices.download.pdf', $invoice)">
+                         <x-secondary-link :href="route('invoices.edit', $invoice)">
+                                Edit Invoice
+                        </x-secondary-link>
+                        
+                        <x-secondary-link :href="route('invoices.download.pdf', $invoice)">
                                 View PDF
-                            </x-secondary-link>
+                        </x-secondary-link>
                     </div>
                 
                 </div>
@@ -105,13 +109,40 @@
                         </div>
                         <div class="mt-2">
 
-                            <p class="text-sm font-medium text-gray-500">Email to customer</p>
-                            <p class="mt-1 text-sm text-gray-900">
-                                <form method="POST" action="{{ route('invoice.send', $invoice) }}"  x-data="{ loading: false }" @submit="loading = true">
-                                    @csrf
-                                    <x-loading-button label="Send Now" />
-                                </form>
-                            </p>
+                           <p class="text-sm font-medium text-gray-500">Send Invoice To</p>
+
+                        <div class="mt-1">
+                           <form method="POST" action="{{ route('invoice.send', $invoice) }}" x-data="{ loading: false }" @submit="loading = true">
+                                @csrf
+                            
+                                <div class="mb-3">
+                                    <x-select-input name="recipient_email" id="recipient_email" class="block w-full text-sm border-gray-300 rounded-md shadow-sm" required>
+                                        <!-- Customer Email Option -->
+                                        @if(optional($invoice->file)->customer && $invoice->file->customer->email)
+                                            <option value="{{ $invoice->file->customer->email }}" 
+                                                {{ old('recipient_email', $email ?? '') == $invoice->file->customer->email ? 'selected' : '' }}>
+                                                Customer: {{ $invoice->file->customer->name ?? $invoice->file->customer->email }} ({{ $invoice->file->customer->email }})
+                                            </option>
+                                        @endif
+                            
+                                        <!-- Assignees Email Options -->
+                                        @if(optional($invoice->file)->assignees)
+                                            @foreach($invoice->file->assignees as $fileAssignee)
+                                                @if(optional($fileAssignee->assignee)->email)
+                                                    <option value="{{ $fileAssignee->assignee->email }}" 
+                                                        {{ old('recipient_email', $email ?? '') == $fileAssignee->assignee->email ? 'selected' : '' }}>
+                                                        Assignee: {{ $fileAssignee->assignee->name ?? $fileAssignee->assignee->email }} ({{ $fileAssignee->assignee->email }})
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </x-select-input>
+                                    <x-input-error class="mt-1" :messages="$errors->get('recipient_email')" />
+                                </div>
+                            
+                                <x-loading-button label="Send Now" />
+                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

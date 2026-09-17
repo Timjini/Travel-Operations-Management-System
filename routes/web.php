@@ -147,7 +147,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
         Route::get('/create', [FileController::class, 'create'])->name('invoices.create');
         Route::get('/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
-        Route::patch('/', [InvoiceController::class, 'update'])->name('invoices.update');
+        Route::patch('/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
         Route::delete('/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
         Route::post('/{invoice}/send', [InvoiceController::class, 'send'])->name('invoice.send');
     });
@@ -178,6 +178,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/{proforma}', [ProformaController::class, 'update'])->name('proformas.update');
         Route::post('/{proforma}/convert', [ProformaController::class, 'convertToInvoice'])->name('proformas.convert-to-invoice');
         Route::post('/{proforma}/send', [ProformaController::class, 'send'])->name('proformas.send');
+        Route::get('/{proforma}/download', [ProformaController::class, 'downloadPdf'])->name('proformas.download.pdf');
     });
 
     Route::get('invoices/{invoice}/download', [InvoiceController::class, 'downloadPdf'])->name('invoices.download.pdf');
